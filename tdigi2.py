@@ -96,6 +96,7 @@ if __name__=="__main__":
             setRGB(0, 0, 200)
 
         list = grovepi.dht(3, 0)
+        list.append(range)
         print list;
         setText_norefresh("temp:" + str(list[0]) + "\nRange:" + str(range))
 
