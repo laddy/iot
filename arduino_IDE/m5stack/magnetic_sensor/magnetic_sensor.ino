@@ -9,7 +9,7 @@
 #define LOOP_INTERVAL (6000)
 
 int read_sw = 5;
-int is_open = 0;
+int is_open = 1;
 int counter = 0;
 
 char *ssid = "NTGR-82BC";
@@ -27,11 +27,14 @@ PubSubClient MqttClient;
 
 
 void setup_network() {
+
+    M5.Lcd.print("Connecting WiFi");
     Serial.print("Connecting to ");
     Serial.println(ssid);
+    
     WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED) {
-        delay(500);
+        delay(1000);
         Serial.print(".");
     }
     Serial.println();
@@ -45,8 +48,15 @@ void connect() {
     MqttClient.setServer(endpoint, 1883);
     MqttClient.setClient(netClient);
     
-    if (!MqttClient.connect(THING_NAME)) {
+    M5.Lcd.fillScreen(BLACK);
+    M5.Lcd.setCursor(20, 20); //文字表示の左上位置を設定
+    M5.Lcd.setTextColor(WHITE); 
+    M5.Lcd.print("Connecting mqtt");
+
+    while ( !MqttClient.connect(THING_NAME) ) {
         Serial.println(MqttClient.state());
+        delay(1000);
+        M5.Lcd.print(".");
     }
     // MqttClient.subscribe("m5stack/sub/#");
     
@@ -55,13 +65,23 @@ void connect() {
 void setup()
 {
   Serial.begin(115200);
-  connect();
-  
+
   // Display Setup
   M5.begin();
   M5.Lcd.setBrightness(200);
   M5.Lcd.fillScreen(BLACK);
+  M5.Lcd.setCursor(20, 20); //文字表示の左上位置を設定
+  M5.Lcd.setTextColor(WHITE); 
+  
+  connect();
 
+
+  M5.Lcd.setBrightness(200);
+  M5.Lcd.fillScreen(BLACK);
+  M5.Lcd.setCursor(20, 20); //文字表示の左上位置を設定
+  M5.Lcd.setTextColor(WHITE); 
+  M5.Lcd.setTextSize(7);//文字の大きさを設定（1～7）
+  M5.Lcd.print("press wait...");
 }
 
 
@@ -72,11 +92,12 @@ void loop()
 {
   int state;
   state = digitalRead(read_sw);
+  //Serial.println(state);
 
   if ( state == CLOSE )
   {
     is_open = 0;
-    // Serial.println("Close");
+    //Serial.println("Close");
   }
   else
   {
