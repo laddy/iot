@@ -5,15 +5,15 @@
 
 #define CLOSE 0
 #define OPEN 1
-#define __VERSION__   "1.0.0"
-#define LOOP_INTERVAL (6000)
 
 int read_sw = 5;
 int is_open = 1;
 int counter = 0;
 
-char *ssid = "NTGR-82BC";
-char *password = "38925206";
+//char *ssid = "NTGR-82BC";
+//char *password = "38925206";
+char *ssid = "TP-Link_20A6";
+char *password = "40296562";
 const char *endpoint = "192.168.1.10";
 const int port = 1883;
 char *THING_NAME = "M5Stack";
@@ -106,7 +106,7 @@ void loop()
       counter++;
 
       //char *send = counter + "\}"; 
-      MqttClient.publish("myTopic", "1");
+      MqttClient.publish("myTopic", "{\"no\":\"1\",\"count\":\"1\"}");
       // char send[100];
       // sprintf(send, "%s%s%s", "{count: ", (String)counter, "}");
       // MqttClient.publish("myTopic",send );
@@ -117,7 +117,7 @@ void loop()
       M5.Lcd.setTextSize(7);//文字の大きさを設定（1～7）
       M5.Lcd.print(counter);
 
-      Serial.println("Count:" + (String)counter);
+      Serial.println("Count:" + (String)counter + "  No:2");
       MqttClient.loop();
 
       if (!MqttClient.connect(THING_NAME)) {
